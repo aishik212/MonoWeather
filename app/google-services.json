@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1077558023098",
+    "project_id": "simpleapps-dev",
+    "storage_bucket": "simpleapps-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077558023098:android:73d90c3ce452f0e85b4383",
+        "android_client_info": {
+          "package_name": "com.simpleapps.weather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077558023098-89t5ole971gac9eh1ji5459019oeose1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.simpleapps.weather",
+            "certificate_hash": "703837d4412e10d57f1b697a7185be1b991c6606"
+          }
+        },
+        {
+          "client_id": "1077558023098-pioeahr2g6fib6fsjeqbp8eldgf4qlvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfV0SBBBnX8zA0dt2lcANlrQWqQfQIOgw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077558023098-pioeahr2g6fib6fsjeqbp8eldgf4qlvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
