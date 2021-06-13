@@ -114,7 +114,6 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
     private fun continueAfterGettingLocation() {
         showSearchScreen()
         if (checkGpsStatus()) {
-            Log.d("texts", "continueAfterGettingLocation: a")
             fetchLocation()
         } else {
             val intent1 = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -125,7 +124,6 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
     override fun onResume() {
         super.onResume()
         if (checkGpsStatus()) {
-            Log.d("texts", "onResume: b")
             fetchLocation()
         } else {
             val intent1 = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);

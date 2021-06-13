@@ -21,6 +21,8 @@ import com.simpleapps.weather.ui.dashboard.forecast.ForecastAdapter
 import com.simpleapps.weather.ui.main.MainActivity
 import com.simpleapps.weather.utils.extensions.isNetworkAvailable
 import com.simpleapps.weather.utils.extensions.observeWith
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashboardBinding>(
     R.layout.fragment_dashboard,
@@ -64,7 +66,6 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                 cardView.setOnClickListener {
                     weatherClick(it.rootView)
                 }
-                Log.d("texts", "init: " + cardView)
             }
         }
         binding.viewModel?.getForecastViewState()?.observeWith(
@@ -77,7 +78,13 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                         DashboardFragmentDirections.actionDashboardFragmentToWeatherDetailFragment(
                             forecasts[0]
                         )
-                    initForecast(forecasts.subList(1, forecasts.size))
+                    forecasts.iterator().forEach {
+                        Log.d("texts", "init: " + it.dtTxt + " " + it.getDay())
+                    }
+                    val filter = forecasts.filter {
+                        it.dtTxt?.substringBefore(" ") != convertLongToTime(System.currentTimeMillis())
+                    }
+                    initForecast(filter)
                 }
                 (activity as MainActivity).viewModel.toolbarTitle.set(it.data?.city?.getCityAndCountry())
             }
@@ -85,9 +92,13 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
 
     }
 
+    fun convertLongToTime(time: Long): String {
+        val date = Date(time)
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        return format.format(date)
+    }
+
     fun weatherClick(v: View) {
-        Log.d("texts", "weatherClick: CLICKED")
-        Log.d("texts", "weatherClick: " + action)
         if ("$action" != "null") {
             findNavController()
                 .navigate(

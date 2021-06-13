@@ -23,7 +23,6 @@ class ForecastAdapter(private val callBack: (ListItem, View, View, View, View, V
         )
         val viewModel = ForecastItemViewModel()
         mBinding.viewModel = viewModel
-
         mBinding.rootView.setOnClickListener {
             mBinding.viewModel?.item?.get()?.let { /*
                 ViewCompat.setTransitionName(mBinding.cardView, mBinding.rootView.resources.getString(R.string.cardView, it.getDay()))

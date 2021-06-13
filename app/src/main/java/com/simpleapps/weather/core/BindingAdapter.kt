@@ -1,6 +1,5 @@
 package com.simpleapps.weather.core
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -35,7 +34,6 @@ fun setWeatherIcon(view: ImageView, iconPath: String?) {
         val imageDrawable = ResourcesCompat.getDrawable(view.resources, imageid, view.context.theme)
         view.setImageDrawable(imageDrawable)
     } catch (e: Exception) {
-        Log.d("texts", "setWeatherIcon: c $iconPath  $newPath " + e.localizedMessage)
     }
 }
 

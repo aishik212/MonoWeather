@@ -1,6 +1,7 @@
 package com.simpleapps.weather.ui.weather_detail
 
 import android.transition.TransitionInflater
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.simpleapps.weather.R
@@ -21,7 +22,6 @@ class WeatherDetailFragment : BaseFragment<WeatherDetailViewModel, FragmentWeath
         super.init()
         binding.viewModel?.weatherItem?.set(weatherDetailFragmentArgs.weatherItem)
         binding.viewModel?.selectedDayDate = weatherDetailFragmentArgs.weatherItem.dtTxt?.substringBefore(" ")
-
         binding.viewModel?.getForecast()?.observeWith(viewLifecycleOwner) {
             binding.viewModel?.selectedDayForecastLiveData
                     ?.postValue(
@@ -47,6 +47,10 @@ class WeatherDetailFragment : BaseFragment<WeatherDetailViewModel, FragmentWeath
     }
 
     private fun initWeatherHourOfDayAdapter(list: List<ListItem>) {
+        Log.d("texts", "initWeatherHourOfDayAdapter: $list ${list.size}")
+        list.iterator().forEach {
+            Log.d("texts", "initWeatherHourOfDayAdapter: " + it.dtTxt)
+        }
         val adapter = WeatherHourOfDayAdapter { _ ->
             // TODO - onClick
         }
