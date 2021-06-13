@@ -11,73 +11,79 @@
         android:fitsSystemWindows="true"
         tools:context=".ui.dashboard.DashboardFragment">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:id="@+id/cLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:visibility="@{viewState.isLoading()}" />
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    app:visibility="@{viewState.isLoading()}" />
+            <TextView
+                android:id="@+id/textViewForecastHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/next_5_days"
+                android:textColor="@color/mainTextColor"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerForecast"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <TextView
-                    android:id="@+id/textViewForecastHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/container_forecast"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/next_5_days"
-                    android:textColor="@color/mainTextColor"
-                    android:textSize="19sp"
-                    android:textStyle="bold" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerForecast"
+                android:layout_width="411dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/container_forecast"
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_forecast" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerForecast"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textViewForecastHeader"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="horizontal"
-                    tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_forecast" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipToday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="false"
+                android:checked="true"
+                android:clickable="false"
+                android:padding="10dp"
+                android:text="@string/today"
+                android:textColor="@color/chipTextColor"
+                android:textSize="20sp"
+                app:chipBackgroundColor="@color/chipItemBackgroundColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipToday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:checkable="false"
-                    android:checked="true"
-                    android:clickable="false"
-                    android:text="@string/today"
-                    android:textColor="@color/chipTextColor"
-                    app:chipBackgroundColor="@color/chipItemBackgroundColor" />
-
-                <include
-                    android:id="@+id/container_forecast"
-                    layout="@layout/layout_dashboard_forecast"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/chipToday"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp" />
-            </RelativeLayout>
-        </androidx.core.widget.NestedScrollView>
+            <include
+                android:id="@+id/container_forecast"
+                layout="@layout/layout_dashboard_forecast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="100dp"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerForecast"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chipToday" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

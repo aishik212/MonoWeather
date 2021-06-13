@@ -31,7 +31,6 @@ class ForecastAdapter(private val callBack: (ListItem, View, View, View, View, V
                 ViewCompat.setTransitionName(mBinding.textViewDayOfWeek, mBinding.rootView.resources.getString(R.string.dayOfWeek, it.getDay()))
                 ViewCompat.setTransitionName(mBinding.textViewTemp, mBinding.rootView.resources.getString(R.string.temp, it.getDay()))
                 ViewCompat.setTransitionName(mBinding.linearLayoutTempMaxMin, mBinding.rootView.resources.getString(R.string.tempMaxMin, it.getDay()))*/
-
                 callBack.invoke(
                         it,
                         mBinding.cardView,

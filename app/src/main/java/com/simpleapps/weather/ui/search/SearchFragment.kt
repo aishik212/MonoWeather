@@ -34,7 +34,10 @@ import com.simpleapps.weather.utils.extensions.tryCatch
 import java.util.*
 
 
-class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.layout.fragment_search, SearchViewModel::class.java), Injectable {
+class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
+    R.layout.fragment_search,
+    SearchViewModel::class.java
+), Injectable {
 
     override fun init() {
         super.init()
@@ -42,7 +45,7 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
         initSearchView()
 
         binding.viewModel?.getSearchViewState()?.observeWith(
-                viewLifecycleOwner
+            viewLifecycleOwner
         ) {
             binding.viewState = it
             it.data?.let { results -> initSearchResultsRecyclerView(results) }
@@ -68,21 +71,27 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
 
     private fun enablePermission() {
         Dexter.withContext(activity)
-                .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(object : MultiplePermissionsListener {
-                    override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
-                        p0?.let {
-                            if (p0.areAllPermissionsGranted()) {
-                                continueAfterGettingLocation()
-                            }
+            .withPermissions(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
+                    p0?.let {
+                        if (p0.areAllPermissionsGranted()) {
+                            continueAfterGettingLocation()
                         }
                     }
+                }
 
-                    override fun onPermissionRationaleShouldBeShown(p0: MutableList<PermissionRequest>?, p1: PermissionToken?) {
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: MutableList<PermissionRequest>?,
+                    p1: PermissionToken?
+                ) {
 
-                    }
-                })
-                .check();
+                }
+            })
+            .check();
     }
 
     private fun checkPermission(permArr: MutableList<String>): Boolean {
@@ -90,7 +99,11 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
         var counter = 0
         if (context != null) {
             permArr.forEach { permission_name ->
-                if (ContextCompat.checkSelfPermission(context, permission_name) == PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        permission_name
+                    ) == PERMISSION_GRANTED
+                ) {
                     counter++
                 }
             }
@@ -101,6 +114,7 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
     private fun continueAfterGettingLocation() {
         showSearchScreen()
         if (checkGpsStatus()) {
+            Log.d("texts", "continueAfterGettingLocation: a")
             fetchLocation()
         } else {
             val intent1 = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -111,6 +125,7 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
     override fun onResume() {
         super.onResume()
         if (checkGpsStatus()) {
+            Log.d("texts", "onResume: b")
             fetchLocation()
         } else {
             val intent1 = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -119,7 +134,8 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
     }
 
     fun checkGpsStatus(): Boolean {
-        val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
@@ -137,17 +153,24 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
     private var locationRequest: LocationRequest? = null
     private var locationCallback: LocationCallback? = null
     private fun fetchLocation() {
+        Log.d("texts", "fetchLocation: ")
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        val permArr: MutableList<String> = mutableListOf(Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        val permArr: MutableList<String> = mutableListOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        Log.d("texts", "fetchLocation: " + checkPermission(permArr))
         if (checkPermission(permArr)) {
             Thread {
                 fusedLocationClient.lastLocation.addOnSuccessListener {
+                    Log.d("texts", "fetchLocation: " + it)
                     if (it != null) {
                         val latitude = it.latitude
                         val longitude = it.longitude
                         Log.d("texts", """fetchLocation: $latitude $longitude """)
                         val geocoder = Geocoder(requireContext(), Locale.getDefault())
-                        val addresses: List<Address> = geocoder.getFromLocation(latitude, longitude, 1)
+                        val addresses: List<Address> =
+                            geocoder.getFromLocation(latitude, longitude, 1)
                         try {
                             val city = addresses[0].locality
                             locationFound(city, latitude, longitude)
@@ -164,7 +187,31 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
                                 override fun onLocationResult(locationResult: LocationResult) {
                                     for (location in locationResult.locations) {
                                         if (location != null) {
-                                            Log.d("texts", "onLocationResult: " + location.latitude + " " + location.longitude)
+                                            try {
+                                                val geocoder =
+                                                    Geocoder(requireContext(), Locale.getDefault())
+                                                val addresses: List<Address> =
+                                                    geocoder.getFromLocation(
+                                                        location.latitude,
+                                                        location.longitude,
+                                                        1
+                                                    )
+                                                val city = addresses[0].locality
+                                                locationFound(
+                                                    city,
+                                                    location.latitude,
+                                                    location.longitude
+                                                )
+                                            } catch (e: Exception) {
+                                                Log.d(
+                                                    "texts",
+                                                    "fetchLocation: " + e.localizedMessage
+                                                )
+                                            }
+                                            Log.d(
+                                                "texts",
+                                                "onLocationResult: " + location.latitude + " " + location.longitude
+                                            )
                                             break
                                         }
                                     }
@@ -172,6 +219,8 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
                             }
                         }
                     }
+                }.addOnFailureListener {
+                    Log.d("texts", "fetchLocation: " + it.localizedMessage)
                 }
             }.start()
         } else {
@@ -195,7 +244,10 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
     private fun initSearchView() {
         binding.enablePermBtn.setOnClickListener { enablePermission() }
         binding.skipBtn.setOnClickListener { skip() }
-        val permArr: MutableList<String> = mutableListOf(Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        val permArr: MutableList<String> = mutableListOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        )
         if (checkPermission(permArr)) {
             continueAfterGettingLocation()
         } else {
@@ -207,24 +259,26 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(R.la
         val adapter = SearchResultAdapter { item ->
             item.coord?.let {
                 binding.viewModel?.saveCoordsToSharedPref(it)
-                        ?.subscribe { _, _ ->
+                    ?.subscribe { _, _ ->
 
-                            tryCatch(
-                                    tryBlock = {
-                                        binding.searchView.hideKeyboard((activity as MainActivity))
-                                    }
-                            )
-                            findNavController().navigate(R.id.action_searchFragment_to_dashboardFragment)
-                        }
+                        tryCatch(
+                            tryBlock = {
+                                binding.searchView.hideKeyboard((activity as MainActivity))
+                            }
+                        )
+                        findNavController().navigate(R.id.action_searchFragment_to_dashboardFragment)
+                    }
             }
         }
 
         binding.recyclerViewSearchResults.adapter = adapter
-        binding.recyclerViewSearchResults.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewSearchResults.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun initSearchResultsRecyclerView(list: List<CitiesForSearchEntity>) {
-        (binding.recyclerViewSearchResults.adapter as SearchResultAdapter).submitList(list.distinctBy { it.getFullName() }.sortedBy { it.importance })
+        (binding.recyclerViewSearchResults.adapter as SearchResultAdapter).submitList(list.distinctBy { it.getFullName() }
+            .sortedBy { it.importance })
     }
 
 

@@ -19,7 +19,6 @@ import com.simpleapps.weather.utils.extensions.show
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import java.io.IOException
 import javax.inject.Inject
 
 
@@ -42,17 +41,6 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>(Ma
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setTransparentStatusBar()
         setupNavigation()
-    }
-
-    private fun handleJSON(): String? {
-        val jsonString: String
-        try {
-            jsonString = assets.open("city_list.json").bufferedReader().use { it.readText() }
-        } catch (ioException: IOException) {
-            ioException.printStackTrace()
-            return null
-        }
-        return jsonString
     }
 
     private fun setTransparentStatusBar() {
@@ -104,7 +92,6 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>(Ma
                     binding.toolbar.hide()
                 }
                 else -> {
-                    binding.toolbar.setNavigationIcon(R.drawable.ic_back)
                     binding.toolbar.show()
                 }
             }

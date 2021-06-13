@@ -36,7 +36,6 @@ class ForecastUseCase @Inject internal constructor(private val repository: Forec
     private fun onForecastResultReady(resource: Resource<ForecastEntity>): ForecastViewState {
         val mappedList = resource.data?.list?.let { ForecastMapper().mapFrom(it) }
         resource.data?.list = mappedList
-
         return ForecastViewState(
                 status = resource.status,
                 error = resource.message,

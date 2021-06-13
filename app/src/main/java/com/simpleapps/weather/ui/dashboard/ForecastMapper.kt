@@ -2,7 +2,10 @@ package com.simpleapps.weather.ui.dashboard
 
 import com.simpleapps.weather.domain.model.ListItem
 import com.simpleapps.weather.utils.Mapper
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+
 
 /**
  * Created by Furkan on 2019-10-26
@@ -19,7 +22,8 @@ class ForecastMapper @Inject constructor() : Mapper<List<ListItem>, List<ListIte
         }
 
         days.forEach { day ->
-
+            val df = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate: String = df.format(Calendar.getInstance().getTime())
             // Find min and max temp values each of the day
             val array = type.filter { it.dtTxt?.substringBefore(" ").equals(day) }
 
@@ -31,11 +35,13 @@ class ForecastMapper @Inject constructor() : Mapper<List<ListItem>, List<ListIte
                 it.main?.tempMax = maxTemp // Set max
                 mappedArray.add(it) // add it to mappedArray
             }
+            if (day != formattedDate) {
+            }
         }
 
         return mappedArray
-                .filter { it.dtTxt?.substringAfter(" ")?.substringBefore(":")?.toInt()!! >= 12 }
-                .distinctBy { it.getDay() } // Eliminate same days
-                .toList() // Return as list
+            .filter { it.dtTxt?.substringAfter(" ")?.substringBefore(":")?.toInt()!! >= 12 }
+            .distinctBy { it.getDay() } // Eliminate same days
+            .toList() // Return as list
     }
 }
