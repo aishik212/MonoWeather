@@ -2,7 +2,6 @@ package com.simpleapps.weather.domain.model
 
 import android.graphics.Color
 import android.os.Parcelable
-import android.util.Log
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
@@ -57,52 +56,41 @@ data class ListItem(
 //            val netDate = Date(s * 1000)
 //            val formattedDate = sdf.format(netDate)
             val ss = s.substringBefore(" ")
-            Log.d(
-                "texts", "getDateTime: " +
-                        ss.substringBefore("-").toInt() + " " +
-                        ss.substringAfter("-").take(2).toInt() + " " +
-                        ss.substringAfterLast("-").toInt()
-            )
             val dayOfWeek = LocalDate.of(
                 ss.substringBefore("-").toInt(),
                 ss.substringAfter("-").take(2).toInt(),
                 ss.substringAfterLast("-").toInt()
             ).dayOfWeek
-            Log.d(
-                "texts",
-                "getDateTime: " + (s) + " " + sdf.toLocalizedPattern() + " " + " " + dayOfWeek + " " + dayOfWeek.name
-            )
             dayOfWeek
         } catch (e: Exception) {
-            Log.d("texts", "getDateTime: " + e.localizedMessage)
             DayOfWeek.MONDAY
         }
     }
 
     fun getColor(): Int {
         return when (dtTxt?.let { getDateTime(it) }) {
-            DayOfWeek.MONDAY -> Color.parseColor("#28E0AE")
-            DayOfWeek.TUESDAY -> Color.parseColor("#FF0090")
-            DayOfWeek.WEDNESDAY -> Color.parseColor("#FFAE00")
-            DayOfWeek.THURSDAY -> Color.parseColor("#0090FF")
-            DayOfWeek.FRIDAY -> Color.parseColor("#DC0000")
-            DayOfWeek.SATURDAY -> Color.parseColor("#0051FF")
-            DayOfWeek.SUNDAY -> Color.parseColor("#3D28E0")
-            else -> Color.parseColor("#28E0AE")
+            DayOfWeek.MONDAY -> Color.parseColor("#E57373")
+            DayOfWeek.TUESDAY -> Color.parseColor("#BA68C8")
+            DayOfWeek.WEDNESDAY -> Color.parseColor("#7986CB")
+            DayOfWeek.THURSDAY -> Color.parseColor("#4FC3F7")
+            DayOfWeek.FRIDAY -> Color.parseColor("#4DB6AC")
+            DayOfWeek.SATURDAY -> Color.parseColor("#81C784")
+            DayOfWeek.SUNDAY -> Color.parseColor("#DCE775")
+            else -> Color.parseColor("#E57373")
         }
     }
 
     fun getHourColor(): Int {
         return when (dtTxt?.substringAfter(" ")?.substringBeforeLast(":")) {
-            "00:00" -> Color.parseColor("#28E0AE")
-            "03:00" -> Color.parseColor("#FF0090")
-            "06:00" -> Color.parseColor("#FFAE00")
-            "09:00" -> Color.parseColor("#0090FF")
-            "12:00" -> Color.parseColor("#DC0000")
-            "15:00" -> Color.parseColor("#0051FF")
-            "18:00" -> Color.parseColor("#3D28E0")
-            "21:00" -> Color.parseColor("#50E3FE")
-            else -> Color.parseColor("#28E0AE")
+            "00:00" -> Color.parseColor("#E57373")
+            "03:00" -> Color.parseColor("#BA68C8")
+            "06:00" -> Color.parseColor("#7986CB")
+            "09:00" -> Color.parseColor("#4FC3F7")
+            "12:00" -> Color.parseColor("#4DB6AC")
+            "15:00" -> Color.parseColor("#81C784")
+            "18:00" -> Color.parseColor("#DCE775")
+            "21:00" -> Color.parseColor("#FFB74D")
+            else -> Color.parseColor("#E57373")
         }
     }
 

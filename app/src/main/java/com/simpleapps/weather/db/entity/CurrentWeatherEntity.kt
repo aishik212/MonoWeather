@@ -78,14 +78,14 @@ data class CurrentWeatherEntity(
 
     fun getColor(): Int {
         return when (dt?.let { getDateTime(it) }) {
-            DayOfWeek.MONDAY -> Color.parseColor("#28E0AE")
-            DayOfWeek.TUESDAY -> Color.parseColor("#FF0090")
-            DayOfWeek.WEDNESDAY -> Color.parseColor("#FFAE00")
-            DayOfWeek.THURSDAY -> Color.parseColor("#0090FF")
-            DayOfWeek.FRIDAY -> Color.parseColor("#DC0000")
-            DayOfWeek.SATURDAY -> Color.parseColor("#0051FF")
-            DayOfWeek.SUNDAY -> Color.parseColor("#3D28E0")
-            else -> Color.parseColor("#28E0AE")
+            DayOfWeek.MONDAY -> Color.parseColor("#E57373")
+            DayOfWeek.TUESDAY -> Color.parseColor("#BA68C8")
+            DayOfWeek.WEDNESDAY -> Color.parseColor("#7986CB")
+            DayOfWeek.THURSDAY -> Color.parseColor("#4FC3F7")
+            DayOfWeek.FRIDAY -> Color.parseColor("#4DB6AC")
+            DayOfWeek.SATURDAY -> Color.parseColor("#81C784")
+            DayOfWeek.SUNDAY -> Color.parseColor("#DCE775")
+            else -> Color.parseColor("#E57373")
         }
     }
 }

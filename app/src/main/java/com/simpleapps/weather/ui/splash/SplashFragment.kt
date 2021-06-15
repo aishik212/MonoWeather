@@ -38,6 +38,7 @@ class SplashFragment : BaseFragment<SplashFragmentViewModel, FragmentSplashBindi
     }
 
     private fun startSplashAnimation(navigateToDashboard: Boolean) {
+        val duration = 500L
         disposable.add(
                 RxAnimation.sequentially(
                         RxAnimation.together(
@@ -54,20 +55,20 @@ class SplashFragment : BaseFragment<SplashFragmentViewModel, FragmentSplashBindi
                         ),
 
                         RxAnimation.together(
-                                binding.imageViewBottomDrawable.fadeIn(1000L),
-                                binding.imageViewBottomDrawable.translationY(-1f),
-                                binding.imageViewBottomDrawableShadow.fadeIn(1250L),
-                                binding.imageViewBottomDrawableShadow.translationY(-1f),
-                                binding.imageViewEllipse.fadeIn(1000L),
-                                binding.imageViewEllipse.translationY(-50F, 1000L)
+                            binding.imageViewBottomDrawable.fadeIn(duration),
+                            binding.imageViewBottomDrawable.translationY(-1f),
+                            binding.imageViewBottomDrawableShadow.fadeIn(1250L),
+                            binding.imageViewBottomDrawableShadow.translationY(-1f),
+                            binding.imageViewEllipse.fadeIn(duration),
+                            binding.imageViewEllipse.translationY(-50F, duration)
                         ),
 
                         RxAnimation.together(
-                                binding.imageViewBigCloud.translationX(-15f, 1000L),
-                                binding.imageViewSmallCloud.translationX(25f, 1000L),
-                                binding.imageViewMainCloud.fadeIn(500L),
-                                binding.buttonExplore.fadeIn(1000L),
-                                binding.welcomeTv.fadeIn(1000L)
+                            binding.imageViewBigCloud.translationX(-15f, duration),
+                            binding.imageViewSmallCloud.translationX(25f, duration),
+                            binding.imageViewMainCloud.fadeIn(500L),
+                            binding.buttonExplore.fadeIn(duration),
+                            binding.welcomeTv.fadeIn(duration)
                         )
                 ).doOnTerminate {
                     findNavController().graph.startDestination = R.id.dashboardFragment // Little bit tricky solution :)
@@ -79,33 +80,34 @@ class SplashFragment : BaseFragment<SplashFragmentViewModel, FragmentSplashBindi
     }
 
     private fun endSplashAnimation(navigateToDashboard: Boolean) {
+        val duration = 200L
         disposable.add(
                 RxAnimation.sequentially(
                         RxAnimation.together(
-                                binding.imageViewBottomDrawable.fadeOut(300L),
-                                binding.imageViewBottomDrawable.translationY(100f),
-                                binding.imageViewBottomDrawableShadow.fadeOut(300L),
-                                binding.imageViewBottomDrawableShadow.translationY(100f)
+                            binding.imageViewBottomDrawable.fadeOut(duration),
+                            binding.imageViewBottomDrawable.translationY(100f),
+                            binding.imageViewBottomDrawableShadow.fadeOut(duration),
+                            binding.imageViewBottomDrawableShadow.translationY(100f)
                         ),
 
-                        RxAnimation.together(
-                                binding.imageViewEllipse.fadeOut(300L),
-                                binding.imageViewEllipse.translationY(500F, 300L)
-                        ),
+                    RxAnimation.together(
+                        binding.imageViewEllipse.fadeOut(duration),
+                        binding.imageViewEllipse.translationY(500F, duration)
+                    ),
 
-                        RxAnimation.together(
-                                binding.imageViewBigCloud.translationX(500f, 300L),
-                                binding.imageViewSmallCloud.translationX(-500f, 300L)
-                        ),
+                    RxAnimation.together(
+                        binding.imageViewBigCloud.translationX(500f, duration),
+                        binding.imageViewSmallCloud.translationX(-500f, duration)
+                    ),
 
-                        binding.imageViewMainCloud.fadeOut(300L),
-                        binding.buttonExplore.fadeOut(300L),
-                        binding.welcomeTv.fadeIn(300L),
-                        binding.rootView.backgroundColor(
-                                Color.parseColor("#5D50FE"),
-                                Color.parseColor("#FFFFFF"),
-                                duration = 750L
-                        )
+                    binding.imageViewMainCloud.fadeOut(duration),
+                    binding.buttonExplore.fadeOut(duration),
+                    binding.welcomeTv.fadeIn(duration),
+                    binding.rootView.backgroundColor(
+                        Color.parseColor("#5D50FE"),
+                        Color.parseColor("#FFFFFF"),
+                        duration = 750L
+                    )
                 )
                         .doOnTerminate {
                             findNavController().graph.startDestination = R.id.dashboardFragment // Little bit tricky solution :)

@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
@@ -37,55 +38,58 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
         result.addSource(dbSource) { newData -> result.setValue(Resource.loading(newData)) }
         createCall()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<RequestType> {
-                    override fun onSubscribe(d: Disposable) {
-                        if (!d.isDisposed) {
-                            mDisposable = d
-                        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : SingleObserver<RequestType> {
+                override fun onSubscribe(d: Disposable) {
+                    if (!d.isDisposed) {
+                        mDisposable = d
                     }
+                }
 
-                    override fun onSuccess(requestType: RequestType) {
-                        result.removeSource(dbSource)
-                        saveResultAndReInit(requestType)
-                    }
+                override fun onSuccess(requestType: RequestType) {
+                    result.removeSource(dbSource)
+                    saveResultAndReInit(requestType)
+                }
 
-                    override fun onError(e: Throwable) {
-                        onFetchFailed()
-                        result.removeSource(dbSource)
-                        result.addSource(dbSource) { newData ->
-                            result.setValue(Resource.error(e.message.toString(), newData))
-                        }
-                        mDisposable!!.dispose()
+                override fun onError(e: Throwable) {
+                    onFetchFailed()
+                    result.removeSource(dbSource)
+                    result.addSource(dbSource) { newData ->
+                        result.setValue(Resource.error(e.message.toString(), newData))
                     }
-                })
+                    mDisposable!!.dispose()
+                }
+            })
     }
 
     @MainThread
     private fun saveResultAndReInit(response: RequestType) {
         Completable
-                .fromCallable { saveCallResult(response) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : CompletableObserver {
-                    override fun onSubscribe(d: Disposable) {
-                        if (!d.isDisposed) {
-                            mDisposable = d
-                        }
+            .fromCallable { saveCallResult(response) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {
+                    if (!d.isDisposed) {
+                        mDisposable = d
                     }
+                }
 
-                    override fun onComplete() {
-                        result.addSource(loadFromDb()) { newData ->
-                            result.setValue(Resource.success(newData))
-                        }
-                        mDisposable!!.dispose()
+                override fun onComplete() {
+                    Log.d("texts", "onComplete: " + (result.value?.message))
+                    Log.d("texts", "onComplete: " + result.value?.data)
+                    Log.d("texts", "onComplete: " + result.value?.status)
+                    result.addSource(loadFromDb()) { newData ->
+                        result.setValue(Resource.success(newData))
                     }
+                    mDisposable!!.dispose()
+                }
 
-                    override fun onError(e: Throwable) {
-                        mDisposable!!.dispose()
-                    }
-                })
+                override fun onError(e: Throwable) {
+                    mDisposable!!.dispose()
+                }
+            })
     }
 
     @WorkerThread

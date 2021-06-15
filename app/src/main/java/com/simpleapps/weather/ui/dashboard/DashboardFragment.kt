@@ -1,7 +1,6 @@
 package com.simpleapps.weather.ui.dashboard
 
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -78,9 +77,6 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                         DashboardFragmentDirections.actionDashboardFragmentToWeatherDetailFragment(
                             forecasts[0]
                         )
-                    forecasts.iterator().forEach {
-                        Log.d("texts", "init: " + it.dtTxt + " " + it.getDay())
-                    }
                     val filter = forecasts.filter {
                         it.dtTxt?.substringBefore(" ") != convertLongToTime(System.currentTimeMillis())
                     }

@@ -57,9 +57,10 @@
             android:id="@+id/imageViewMainCloud"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/imageViewEllipse"
+            android:layout_above="@+id/imageViewBottomDrawableShadow"
+            android:layout_alignTop="@+id/imageViewBigCloud"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_splash_screen_main_logo" />
+            android:src="@mipmap/ic_launcher_round" />
 
         <TextView
             android:id="@+id/welcomeTv"

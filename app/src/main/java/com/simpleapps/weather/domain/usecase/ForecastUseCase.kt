@@ -1,5 +1,6 @@
 package com.simpleapps.weather.domain.usecase
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.simpleapps.weather.core.Constants
@@ -29,6 +30,9 @@ class ForecastUseCase @Inject internal constructor(private val repository: Forec
                         ?: false,
                 units = params?.units ?: Constants.Coords.METRIC
         ).map {
+            it.data?.list?.iterator()?.forEach {
+                Log.d("texts", "buildUseCaseObservable: " + it)
+            }
             onForecastResultReady(it)
         }
     }
