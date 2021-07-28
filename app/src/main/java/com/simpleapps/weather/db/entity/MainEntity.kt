@@ -1,6 +1,7 @@
 package com.simpleapps.weather.db.entity
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -48,6 +49,7 @@ data class MainEntity(
     }
 
     fun getHumidityString(): String {
-        return humidity.toString() + "°"
+        Log.d("texts", "getHumidityString: " + humidity)
+        return humidity.toString() + "%"
     }
 }

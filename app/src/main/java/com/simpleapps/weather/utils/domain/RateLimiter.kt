@@ -2,6 +2,7 @@ package com.simpleapps.weather.utils.domain
 
 import android.os.SystemClock
 import android.util.ArrayMap
+import android.util.Log
 import java.util.concurrent.TimeUnit
 
 /**
@@ -19,6 +20,7 @@ class RateLimiter<in KEY>(timeout: Int, timeUnit: TimeUnit) {
     fun shouldFetch(key: KEY): Boolean {
         val lastFetched = timestamps[key]
         val now = now()
+        Log.d("texts", "shouldFetch: $lastFetched $timeout $now")
         if (lastFetched == null) {
             timestamps[key] = now
             return true

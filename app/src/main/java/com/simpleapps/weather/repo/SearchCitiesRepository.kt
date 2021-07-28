@@ -1,6 +1,7 @@
 package com.simpleapps.weather.repo
 
 import NetworkBoundResource
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.simpleapps.weather.core.Constants.NetworkService.RATE_LIMITER_TYPE
 import com.simpleapps.weather.db.entity.CitiesForSearchEntity
@@ -29,6 +30,7 @@ class SearchCitiesRepository @Inject constructor(
             override fun saveCallResult(item: SearchResponse) = searchCitiesLocalDataSource.insertCities(item)
 
             override fun shouldFetch(data: List<CitiesForSearchEntity>?): Boolean {
+                Log.d("texts", "shouldFetch: ")
                 return data == null || data.isEmpty()
             }
 

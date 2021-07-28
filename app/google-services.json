@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "1077558023098",
-    "project_id": "simpleapps-dev",
-    "storage_bucket": "simpleapps-dev.appspot.com"
+    "project_number": "464223468798",
+    "project_id": "simpleapps-6a092",
+    "storage_bucket": "simpleapps-6a092.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1077558023098:android:73d90c3ce452f0e85b4383",
+        "mobilesdk_app_id": "1:464223468798:android:9f44d8d27addfd1314b9af",
         "android_client_info": {
           "package_name": "com.simpleapps.weather"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1077558023098-89t5ole971gac9eh1ji5459019oeose1.apps.googleusercontent.com",
+          "client_id": "464223468798-26hi9aaugf32rgpsttegv5euig3j8no7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.simpleapps.weather",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "1077558023098-pioeahr2g6fib6fsjeqbp8eldgf4qlvv.apps.googleusercontent.com",
+          "client_id": "464223468798-ani25020mp9f3h0iociv14sus1474i01.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCfV0SBBBnX8zA0dt2lcANlrQWqQfQIOgw"
+          "current_key": "AIzaSyDERhU561f2laezsG5EvH9U13Sn8kYkDGg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1077558023098-pioeahr2g6fib6fsjeqbp8eldgf4qlvv.apps.googleusercontent.com",
+              "client_id": "464223468798-ani25020mp9f3h0iociv14sus1474i01.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

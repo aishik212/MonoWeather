@@ -27,6 +27,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         dbSource = loadFromDb()
         result.addSource(dbSource) { data ->
             result.removeSource(dbSource)
+            Log.d("texts", ": " + shouldFetch(data))
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource)
             } else {
@@ -77,9 +78,6 @@ abstract class NetworkBoundResource<ResultType, RequestType>
                 }
 
                 override fun onComplete() {
-                    Log.d("texts", "onComplete: " + (result.value?.message))
-                    Log.d("texts", "onComplete: " + result.value?.data)
-                    Log.d("texts", "onComplete: " + result.value?.status)
                     result.addSource(loadFromDb()) { newData ->
                         result.setValue(Resource.success(newData))
                     }

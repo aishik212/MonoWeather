@@ -18,6 +18,8 @@
         <RelativeLayout
             android:id="@+id/rootView"
             android:layout_width="match_parent"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -73,7 +75,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="24dp"
                 android:text="@{viewState.data.main.getHumidityString()}"
-                android:textColor="@color/whiteWithOpacity"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 tools:text="35°" />
         </RelativeLayout>

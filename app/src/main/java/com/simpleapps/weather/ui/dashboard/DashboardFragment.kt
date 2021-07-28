@@ -1,6 +1,7 @@
 package com.simpleapps.weather.ui.dashboard
 
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -8,9 +9,13 @@ import androidx.cardview.widget.CardView
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.simpleapps.weather.R
 import com.simpleapps.weather.core.BaseFragment
 import com.simpleapps.weather.core.Constants
+import com.simpleapps.weather.core.Constants.NetworkService.API_KEY_VALUE
 import com.simpleapps.weather.databinding.FragmentDashboardBinding
 import com.simpleapps.weather.di.Injectable
 import com.simpleapps.weather.domain.model.ListItem
@@ -18,8 +23,12 @@ import com.simpleapps.weather.domain.usecase.CurrentWeatherUseCase
 import com.simpleapps.weather.domain.usecase.ForecastUseCase
 import com.simpleapps.weather.ui.dashboard.forecast.ForecastAdapter
 import com.simpleapps.weather.ui.main.MainActivity
+import com.simpleapps.weather.utils.CacheUtils
 import com.simpleapps.weather.utils.extensions.isNetworkAvailable
 import com.simpleapps.weather.utils.extensions.observeWith
+import com.simpleapps.weather.utils.typeconverters.DataConverter
+import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,7 +37,8 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
     DashboardFragmentViewModel::class.java
 ), Injectable {
     var action: DashboardFragmentDirections.ActionDashboardFragmentToWeatherDetailFragment? = null
-
+    var dtList: MutableList<String> = mutableListOf()
+    val arr: ArrayList<ListItem> = arrayListOf()
     override fun init() {
         super.init()
         initForecastAdapter()
@@ -77,10 +87,69 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                         DashboardFragmentDirections.actionDashboardFragmentToWeatherDetailFragment(
                             forecasts[0]
                         )
-                    val filter = forecasts.filter {
-                        it.dtTxt?.substringBefore(" ") != convertLongToTime(System.currentTimeMillis())
+                    try {
+                        val cache = CacheUtils.getCache(
+                            activity,
+                            CacheUtils.Companion.CACHEVAL.WEATHER
+                        )
+                        if (cache != null) {
+                            val jsonArray = JSONArray(JSONObject(cache).get("list").toString())
+                            val stringToList = DataConverter.stringToList(jsonArray.toString())
+                            if (stringToList != null) {
+                                stringToList.iterator().forEach {
+                                    val element = it.dtTxt.toString().split(" ")[0]
+                                    if (!dtList.contains(element)) {
+                                        dtList.add(element)
+                                        arr.add(it)
+                                    }
+                                }
+                                val alist: List<ListItem> = arr
+                                initForecast(alist)
+                            } else {
+
+                            }
+                        } else {
+                            val city = it.data.city?.cityName
+                            val url = "http://api.openweathermap.org/data/2.5/forecast?q=${
+                                city?.replace(
+                                    "\n",
+                                    ""
+                                )
+                            }&appid=${API_KEY_VALUE}&units=metric"
+                            val queue = Volley.newRequestQueue(requireContext())
+                            val stringRequest = StringRequest(Request.Method.GET, url,
+                                { response ->
+                                    CacheUtils.setCache(
+                                        activity, response,
+                                        CacheUtils.Companion.CACHEVAL.WEATHER
+                                    )
+                                    val jsonArray =
+                                        JSONArray(JSONObject(response).get("list").toString())
+                                    val stringToList =
+                                        DataConverter.stringToList(jsonArray.toString())
+                                    if (stringToList != null) {
+                                        stringToList.iterator().forEach {
+                                            val element = it.dtTxt.toString().split(" ")[0]
+                                            if (!dtList.contains(element)) {
+                                                dtList.add(element)
+                                                arr.add(it)
+                                            }
+                                        }
+                                        val alist: List<ListItem> = arr
+                                        initForecast(alist)
+                                    }
+
+                                },
+                                {
+                                    Log.d("texts", "init: " + it.localizedMessage)
+                                }
+                            )
+                            queue.add(stringRequest)
+                        }
+
+                    } catch (e: Exception) {
+                        Log.d("texts", "fetchLocation: " + e.localizedMessage)
                     }
-                    initForecast(filter)
                 }
                 (activity as MainActivity).viewModel.toolbarTitle.set(it.data?.city?.getCityAndCountry())
             }
@@ -161,6 +230,13 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
     }
 
     private fun initForecast(list: List<ListItem>) {
+        list.iterator().forEach {
+            Log.d(
+                "texts",
+                "init: bbb " + it.dtTxt + " " + it.getHourOfDay() + " " + it.main?.temp + " " + it.getDay()
+            )
+
+        }
         (binding.recyclerForecast.adapter as ForecastAdapter).submitList(list)
     }
 }
