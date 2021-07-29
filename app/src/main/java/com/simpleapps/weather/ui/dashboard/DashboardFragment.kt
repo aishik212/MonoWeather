@@ -17,6 +17,7 @@ import com.simpleapps.weather.core.BaseFragment
 import com.simpleapps.weather.core.Constants
 import com.simpleapps.weather.core.Constants.NetworkService.API_KEY_VALUE
 import com.simpleapps.weather.databinding.FragmentDashboardBinding
+import com.simpleapps.weather.db.entity.ForecastEntity
 import com.simpleapps.weather.di.Injectable
 import com.simpleapps.weather.domain.model.ListItem
 import com.simpleapps.weather.domain.usecase.CurrentWeatherUseCase
@@ -36,9 +37,10 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
     R.layout.fragment_dashboard,
     DashboardFragmentViewModel::class.java
 ), Injectable {
-    var action: DashboardFragmentDirections.ActionDashboardFragmentToWeatherDetailFragment? = null
-    var dtList: MutableList<String> = mutableListOf()
-    val arr: ArrayList<ListItem> = arrayListOf()
+    private var action: DashboardFragmentDirections.ActionDashboardFragmentToWeatherDetailFragment? =
+        null
+    private var dtList: MutableList<String> = mutableListOf()
+    private val arr: ArrayList<ListItem> = arrayListOf()
     override fun init() {
         super.init()
         initForecastAdapter()
@@ -92,59 +94,16 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                             activity,
                             CacheUtils.Companion.CACHEVAL.WEATHER
                         )
-                        if (cache != null) {
-                            val jsonArray = JSONArray(JSONObject(cache).get("list").toString())
-                            val stringToList = DataConverter.stringToList(jsonArray.toString())
-                            if (stringToList != null) {
-                                stringToList.iterator().forEach {
-                                    val element = it.dtTxt.toString().split(" ")[0]
-                                    if (!dtList.contains(element)) {
-                                        dtList.add(element)
-                                        arr.add(it)
-                                    }
-                                }
-                                val alist: List<ListItem> = arr
-                                initForecast(alist)
-                            } else {
-
-                            }
+                        val timeLeft = CacheUtils.getCacheTime(
+                            activity,
+                            CacheUtils.Companion.CACHEVAL.WEATHER
+                        )
+                        Log.d("texts", "init: Time Left ${timeLeft / 1000}")
+                        if (cache != null && timeLeft > 0) {
+//                            LOAD FROM CACHE and Check TimeLeft
+                            loadFromCache(cache, it.data)
                         } else {
-                            val city = it.data.city?.cityName
-                            val url = "http://api.openweathermap.org/data/2.5/forecast?q=${
-                                city?.replace(
-                                    "\n",
-                                    ""
-                                )
-                            }&appid=${API_KEY_VALUE}&units=metric"
-                            val queue = Volley.newRequestQueue(requireContext())
-                            val stringRequest = StringRequest(Request.Method.GET, url,
-                                { response ->
-                                    CacheUtils.setCache(
-                                        activity, response,
-                                        CacheUtils.Companion.CACHEVAL.WEATHER
-                                    )
-                                    val jsonArray =
-                                        JSONArray(JSONObject(response).get("list").toString())
-                                    val stringToList =
-                                        DataConverter.stringToList(jsonArray.toString())
-                                    if (stringToList != null) {
-                                        stringToList.iterator().forEach {
-                                            val element = it.dtTxt.toString().split(" ")[0]
-                                            if (!dtList.contains(element)) {
-                                                dtList.add(element)
-                                                arr.add(it)
-                                            }
-                                        }
-                                        val alist: List<ListItem> = arr
-                                        initForecast(alist)
-                                    }
-
-                                },
-                                {
-                                    Log.d("texts", "init: " + it.localizedMessage)
-                                }
-                            )
-                            queue.add(stringRequest)
+                            loadFromApi(it.data)
                         }
 
                     } catch (e: Exception) {
@@ -155,6 +114,63 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
             }
         }
 
+    }
+
+    private fun loadFromCache(cache: String, data: ForecastEntity): Any? {
+        val jsonArray = JSONArray(JSONObject(cache).get("list").toString())
+        val stringToList = DataConverter.stringToList(jsonArray.toString())
+        return if (stringToList != null) {
+            stringToList.iterator().forEach {
+                val element = it.dtTxt.toString().split(" ")[0]
+                if (!dtList.contains(element)) {
+                    dtList.add(element)
+                    arr.add(it)
+                }
+            }
+            val alist: List<ListItem> = arr
+            initForecast(alist)
+        } else {
+            loadFromApi(data)
+        }
+    }
+
+    private fun loadFromApi(data: ForecastEntity): Request<String>? {
+        val city = data.city?.cityName
+        val url = "http://api.openweathermap.org/data/2.5/forecast?q=${
+            city?.replace(
+                "\n",
+                ""
+            )
+        }&appid=${API_KEY_VALUE}&units=metric"
+        val queue = Volley.newRequestQueue(requireContext())
+        val stringRequest = StringRequest(Request.Method.GET, url,
+            { response ->
+                CacheUtils.setCache(
+                    activity, response,
+                    CacheUtils.Companion.CACHEVAL.WEATHER
+                )
+                val jsonArray =
+                    JSONArray(JSONObject(response).get("list").toString())
+                val stringToList =
+                    DataConverter.stringToList(jsonArray.toString())
+                if (stringToList != null) {
+                    stringToList.iterator().forEach {
+                        val element = it.dtTxt.toString().split(" ")[0]
+                        if (!dtList.contains(element)) {
+                            dtList.add(element)
+                            arr.add(it)
+                        }
+                    }
+                    val alist: List<ListItem> = arr
+                    initForecast(alist)
+                }
+
+            },
+            {
+                Log.d("texts", "init: " + it.localizedMessage)
+            }
+        )
+        return queue.add(stringRequest)
     }
 
     fun convertLongToTime(time: Long): String {
@@ -230,13 +246,6 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
     }
 
     private fun initForecast(list: List<ListItem>) {
-        list.iterator().forEach {
-            Log.d(
-                "texts",
-                "init: bbb " + it.dtTxt + " " + it.getHourOfDay() + " " + it.main?.temp + " " + it.getDay()
-            )
-
-        }
         (binding.recyclerForecast.adapter as ForecastAdapter).submitList(list)
     }
 }

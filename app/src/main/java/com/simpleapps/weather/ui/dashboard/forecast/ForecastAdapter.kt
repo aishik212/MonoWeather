@@ -1,6 +1,5 @@
 package com.simpleapps.weather.ui.dashboard.forecast
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,10 +45,7 @@ class ForecastAdapter(private val callBack: (ListItem, View, View, View, View, V
 
     override fun bind(binding: ViewDataBinding, position: Int) {
         val item = getItem(position)
-        Log.d(
-            "texts",
-            "bind: " + item.getDay() + " " + item.getHourOfDay() + " " + item.getWeatherItem()
-        )
+
         (binding as ItemForecastBinding).viewModel?.item?.set(item)
         binding.executePendingBindings()
     }

@@ -70,12 +70,12 @@ data class ListItem(
     fun getColor(): Int {
         return when (dtTxt?.let { getDateTime(it) }) {
             DayOfWeek.MONDAY -> Color.parseColor("#E57373")
-            DayOfWeek.TUESDAY -> Color.parseColor("#BA68C8")
-            DayOfWeek.WEDNESDAY -> Color.parseColor("#7986CB")
-            DayOfWeek.THURSDAY -> Color.parseColor("#4FC3F7")
+            DayOfWeek.TUESDAY -> Color.parseColor("#DCE775")
+            DayOfWeek.WEDNESDAY -> Color.parseColor("#BA68C8")
+            DayOfWeek.THURSDAY -> Color.parseColor("#81C784")
             DayOfWeek.FRIDAY -> Color.parseColor("#4DB6AC")
-            DayOfWeek.SATURDAY -> Color.parseColor("#81C784")
-            DayOfWeek.SUNDAY -> Color.parseColor("#DCE775")
+            DayOfWeek.SATURDAY -> Color.parseColor("#4FC3F7")
+            DayOfWeek.SUNDAY -> Color.parseColor("#7986CB")
             else -> Color.parseColor("#E57373")
         }
     }

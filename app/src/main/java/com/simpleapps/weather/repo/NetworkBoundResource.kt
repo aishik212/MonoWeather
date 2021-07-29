@@ -1,4 +1,3 @@
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
@@ -27,7 +26,6 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         dbSource = loadFromDb()
         result.addSource(dbSource) { data ->
             result.removeSource(dbSource)
-            Log.d("texts", ": " + shouldFetch(data))
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource)
             } else {

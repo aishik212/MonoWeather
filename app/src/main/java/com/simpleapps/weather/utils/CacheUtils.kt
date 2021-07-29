@@ -13,7 +13,19 @@ class CacheUtils {
         fun setCache(activity: FragmentActivity?, response: String?, key: CACHEVAL) {
             if (activity != null && response != null && response.trim() != "") {
                 initCache(activity).edit().putString(key.toString(), response).apply();
+                val l = (System.currentTimeMillis() + (1000L * 6L * 60L * 60L))
+                initCache(activity).edit().putLong(key.toString() + "_time", l).apply();
             }
+        }
+
+        fun getCacheTime(activity: FragmentActivity?, key: CACHEVAL): Long {
+            if (activity != null) {
+                return initCache(activity).getLong(
+                    key.toString() + "_time",
+                    0
+                ) - System.currentTimeMillis()
+            }
+            return 0
         }
 
         fun getCache(activity: FragmentActivity?, key: CACHEVAL): String? {
