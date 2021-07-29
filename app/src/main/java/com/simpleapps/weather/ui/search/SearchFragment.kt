@@ -28,6 +28,7 @@ import com.simpleapps.weather.db.entity.CitiesForSearchEntity
 import com.simpleapps.weather.di.Injectable
 import com.simpleapps.weather.ui.main.MainActivity
 import com.simpleapps.weather.ui.search.result.SearchResultAdapter
+import com.simpleapps.weather.utils.CacheUtils
 import com.simpleapps.weather.utils.extensions.hideKeyboard
 import com.simpleapps.weather.utils.extensions.observeWith
 import com.simpleapps.weather.utils.extensions.tryCatch
@@ -199,6 +200,11 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
                                                     city,
                                                     location.latitude,
                                                     location.longitude
+                                                )
+                                                CacheUtils.setCache(
+                                                    activity,
+                                                    city,
+                                                    CacheUtils.Companion.CACHEVAL.CITY
                                                 )
                                             } catch (e: Exception) {
                                                 Log.d(

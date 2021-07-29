@@ -151,8 +151,8 @@ dependencies {
     kapt "androidx.room:room-compiler:2.2.6"
 
     //dataBinding
-    kapt "androidx.databinding:databinding-compiler:4.2.2"
-    annotationProcessor "androidx.databinding:databinding-compiler:4.2.2"
+    kapt "androidx.databinding:databinding-compiler:7.0.0"
+    annotationProcessor "androidx.databinding:databinding-compiler:7.0.0"
 
     //dagger
     implementation "com.google.dagger:dagger-android:2.35.1"

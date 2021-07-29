@@ -1,7 +1,6 @@
 package com.simpleapps.weather.domain
 
 import com.simpleapps.weather.domain.model.CurrentWeatherResponse
-import com.simpleapps.weather.domain.model.ForecastResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,7 +11,7 @@ import retrofit2.http.Query
 
 interface WeatherAppAPI {
 
-    @GET("forecast")
+/*    @GET("forecast")
     fun getForecastByGeoCords(
             @Query("lat")
             lat: Double,
@@ -20,7 +19,7 @@ interface WeatherAppAPI {
             lon: Double,
             @Query("units")
             units: String
-    ): Single<ForecastResponse>
+    ): Single<ForecastResponse>*/
 
     @GET("weather")
     fun getCurrentByGeoCords(

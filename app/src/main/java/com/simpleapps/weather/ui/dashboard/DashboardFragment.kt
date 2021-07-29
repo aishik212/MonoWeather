@@ -1,5 +1,7 @@
 package com.simpleapps.weather.ui.dashboard
 
+import android.location.Address
+import android.location.Geocoder
 import android.transition.TransitionInflater
 import android.util.Log
 import android.view.View
@@ -17,13 +19,10 @@ import com.simpleapps.weather.core.BaseFragment
 import com.simpleapps.weather.core.Constants
 import com.simpleapps.weather.core.Constants.NetworkService.API_KEY_VALUE
 import com.simpleapps.weather.databinding.FragmentDashboardBinding
-import com.simpleapps.weather.db.entity.ForecastEntity
 import com.simpleapps.weather.di.Injectable
 import com.simpleapps.weather.domain.model.ListItem
 import com.simpleapps.weather.domain.usecase.CurrentWeatherUseCase
-import com.simpleapps.weather.domain.usecase.ForecastUseCase
 import com.simpleapps.weather.ui.dashboard.forecast.ForecastAdapter
-import com.simpleapps.weather.ui.main.MainActivity
 import com.simpleapps.weather.utils.CacheUtils
 import com.simpleapps.weather.utils.extensions.isNetworkAvailable
 import com.simpleapps.weather.utils.extensions.observeWith
@@ -59,14 +58,14 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                     Constants.Coords.METRIC
                 )
             )
-            binding.viewModel?.setForecastParams(
+/*            binding.viewModel?.setForecastParams(
                 ForecastUseCase.ForecastParams(
                     lat,
                     lon,
                     isNetworkAvailable(requireContext()),
                     Constants.Coords.METRIC
                 )
-            )
+            )*/
         }
         binding.viewModel?.getCurrentWeatherViewState()?.observeWith(
             viewLifecycleOwner
@@ -79,6 +78,7 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                 }
             }
         }
+        /*
         binding.viewModel?.getForecastViewState()?.observeWith(
             viewLifecycleOwner
         ) {
@@ -89,34 +89,33 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                         DashboardFragmentDirections.actionDashboardFragmentToWeatherDetailFragment(
                             forecasts[0]
                         )
-                    try {
-                        val cache = CacheUtils.getCache(
-                            activity,
-                            CacheUtils.Companion.CACHEVAL.WEATHER
-                        )
-                        val timeLeft = CacheUtils.getCacheTime(
-                            activity,
-                            CacheUtils.Companion.CACHEVAL.WEATHER
-                        )
-                        Log.d("texts", "init: Time Left ${timeLeft / 1000}")
-                        if (cache != null && timeLeft > 0) {
-//                            LOAD FROM CACHE and Check TimeLeft
-                            loadFromCache(cache, it.data)
-                        } else {
-                            loadFromApi(it.data)
-                        }
-
-                    } catch (e: Exception) {
-                        Log.d("texts", "fetchLocation: " + e.localizedMessage)
-                    }
                 }
                 (activity as MainActivity).viewModel.toolbarTitle.set(it.data?.city?.getCityAndCountry())
             }
+        }*/
+        try {
+            val cache = CacheUtils.getCache(
+                activity,
+                CacheUtils.Companion.CACHEVAL.WEATHER
+            )
+            val timeLeft = CacheUtils.getCacheTime(
+                activity,
+                CacheUtils.Companion.CACHEVAL.WEATHER
+            )
+            if (cache != null && timeLeft > 0) {
+//          LOAD FROM CACHE and Check TimeLeft
+                loadFromCache(cache)
+            } else {
+                loadFromApi()
+            }
+
+        } catch (e: Exception) {
+            Log.d("texts", "fetchLocation: " + e.localizedMessage)
         }
 
     }
 
-    private fun loadFromCache(cache: String, data: ForecastEntity): Any? {
+    private fun loadFromCache(cache: String): Any? {
         val jsonArray = JSONArray(JSONObject(cache).get("list").toString())
         val stringToList = DataConverter.stringToList(jsonArray.toString())
         return if (stringToList != null) {
@@ -130,12 +129,16 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
             val alist: List<ListItem> = arr
             initForecast(alist)
         } else {
-            loadFromApi(data)
+            loadFromApi()
         }
     }
 
-    private fun loadFromApi(data: ForecastEntity): Request<String>? {
-        val city = data.city?.cityName
+    private fun loadFromApi(): Request<String>? {
+        var city = CacheUtils.getCache(activity, CacheUtils.Companion.CACHEVAL.CITY)
+        if (city == null) {
+            city = fetchCityFromCoord(city)
+        }
+        Log.d("texts", "loadFromApi: " + city)
         val url = "http://api.openweathermap.org/data/2.5/forecast?q=${
             city?.replace(
                 "\n",
@@ -171,6 +174,22 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
             }
         )
         return queue.add(stringRequest)
+    }
+
+    private fun fetchCityFromCoord(city: String?): String? {
+        var city1 = city
+        val latitude = CacheUtils.getCache(activity, CacheUtils.Companion.CACHEVAL.lat)
+        val longitude = CacheUtils.getCache(activity, CacheUtils.Companion.CACHEVAL.lon)
+        val latitude1 = latitude
+        val longitude1 = longitude
+        Log.d("texts", """fetchLocation: $latitude1 $longitude1 """)
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        if (latitude1 != null && longitude1 != null) {
+            val addresses: List<Address> =
+                geocoder.getFromLocation(latitude1.toDouble(), longitude1.toDouble(), 1)
+            city1 = addresses[0].locality
+        }
+        return city1
     }
 
     fun convertLongToTime(time: Long): String {
