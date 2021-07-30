@@ -43,6 +43,9 @@ android {
         versionName "2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.monokey
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
     buildTypes {
         release {
@@ -147,7 +150,7 @@ dependencies {
 
     //room
     implementation "androidx.room:room-runtime:2.2.6"
-    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
     kapt "androidx.room:room-compiler:2.2.6"
 
     //dataBinding

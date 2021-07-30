@@ -7,10 +7,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@{viewState.data.getColor()}"
         android:fitsSystemWindows="true"
-        android:onClick="@{v -> fragment.weatherClick(v)}"
-        android:visibility="@{viewState.isLoading() ? View.INVISIBLE : View.VISIBLE}"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
         tools:visibility="visible">
@@ -28,7 +25,6 @@
                 android:layout_height="75dp"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="24dp"
-                app:setWeatherIcon="@{viewState.data.getCurrentWeather().icon}"
                 tools:src="@drawable/a10d_svg" />
 
             <TextView
@@ -38,7 +34,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="18dp"
-                android:text="@{viewState.data.main.getTempString()}"
                 android:textColor="@color/white"
                 android:textSize="50sp"
                 tools:text="25°" />
@@ -50,7 +45,6 @@
                 android:layout_below="@id/textViewTemperature"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="@{viewState.data.getCurrentWeather().main}"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 tools:text="Clouds &amp; Sun" />
@@ -74,23 +68,9 @@
                 android:layout_below="@id/textViewHumidityHeader"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="24dp"
-                android:text="@{viewState.data.main.getHumidityString()}"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 tools:text="35°" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="viewState"
-            type="com.simpleapps.weather.ui.dashboard.CurrentWeatherViewState" />
-
-        <variable
-            name="fragment"
-            type="com.simpleapps.weather.ui.dashboard.DashboardFragment" />
-    </data>
 </layout>

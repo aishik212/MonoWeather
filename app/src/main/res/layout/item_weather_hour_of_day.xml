@@ -27,8 +27,8 @@
                 android:layout_below="@id/textViewHourOfDay"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
-                android:tint="@{viewModel.item.getHourColor()}"
                 app:setWeatherIcon="@{viewModel.item.getWeatherItem().icon}"
+                android:tint="@{viewModel.item.getHourColor()}"
                 tools:src="@drawable/a10d_svg" />
 
 

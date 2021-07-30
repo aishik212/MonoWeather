@@ -22,4 +22,5 @@
     <string name="unexpected_exception" />
     <string name="welcome_text">Welcome To\nMonoWeather</string>
     <string name="close_fab_string">close card</string>
+    <string name="title_activity_compose_test_search">composeTestSearchActivity</string>
 </resources>

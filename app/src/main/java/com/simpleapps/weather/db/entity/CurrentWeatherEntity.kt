@@ -76,7 +76,7 @@ data class CurrentWeatherEntity(
         }
     }
 
-    fun getColor(): Int {
+    fun getColor(dt: Long?): Int {
         return when (dt?.let { getDateTime(it) }) {
             DayOfWeek.MONDAY -> Color.parseColor("#E57373")
             DayOfWeek.TUESDAY -> Color.parseColor("#BA68C8")

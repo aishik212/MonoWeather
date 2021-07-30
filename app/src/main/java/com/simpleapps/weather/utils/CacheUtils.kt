@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentActivity
 class CacheUtils {
     companion object {
         enum class CACHEVAL {
-            WEATHER, CITY, lat, lon
+            WEATHER_FORECAST, CITY, lat, lon, CURRENT_WEATHER
         }
 
         fun setCache(activity: FragmentActivity?, response: String?, key: CACHEVAL) {

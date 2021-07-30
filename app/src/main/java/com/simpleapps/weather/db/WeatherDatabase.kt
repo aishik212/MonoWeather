@@ -12,12 +12,13 @@ import com.simpleapps.weather.db.entity.ForecastEntity
 import com.simpleapps.weather.utils.typeconverters.DataConverter
 
 @Database(
-        entities = [
-            ForecastEntity::class,
-            CurrentWeatherEntity::class,
-            CitiesForSearchEntity::class
-        ],
-        version = 2
+    entities = [
+        ForecastEntity::class,
+        CurrentWeatherEntity::class,
+        CitiesForSearchEntity::class
+    ],
+    version = 2,
+    exportSchema = false
 )
 @TypeConverters(DataConverter::class)
 abstract class WeatherDatabase : RoomDatabase() {
