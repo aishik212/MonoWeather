@@ -16,6 +16,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
+import com.simpleapps.cacheutils.CacheUtils
 import com.simpleapps.weather.R
 import com.simpleapps.weather.core.BaseFragment
 import com.simpleapps.weather.core.Constants.NetworkService.API_KEY_VALUE
@@ -24,7 +25,7 @@ import com.simpleapps.weather.di.Injectable
 import com.simpleapps.weather.domain.model.CurrentWeatherResponse
 import com.simpleapps.weather.domain.model.ListItem
 import com.simpleapps.weather.ui.dashboard.forecast.ForecastAdapter
-import com.simpleapps.weather.utils.CacheUtils
+import com.simpleapps.weather.ui.main.MainActivity
 import com.simpleapps.weather.utils.typeconverters.DataConverter
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
@@ -97,16 +98,23 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
         }*/
         loadCurrentWeather()
         loadForecast()
-
+        var city = com.simpleapps.cacheutils.CacheUtils.getCache(
+            activity,
+            com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.CITY
+        )
+        if (city == null) {
+            city = fetchCityFromCoord(city)
+        }
+        (activity as MainActivity).viewModel.toolbarTitle.set(city)
     }
 
     private fun loadCurrentWeather() {
-        val key = CacheUtils.Companion.CACHEVAL.CURRENT_WEATHER
-        val cache = CacheUtils.getCache(
+        val key = com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.CURRENT_WEATHER
+        val cache = com.simpleapps.cacheutils.CacheUtils.getCache(
             activity,
             key
         )
-        val timeLeft = CacheUtils.getCacheTime(
+        val timeLeft = com.simpleapps.cacheutils.CacheUtils.getCacheTime(
             activity,
             key
         )
@@ -120,12 +128,12 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
 
     private fun loadForecast() {
         try {
-            val key = CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST
-            val cache = CacheUtils.getCache(
+            val key = com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST
+            val cache = com.simpleapps.cacheutils.CacheUtils.getCache(
                 activity,
                 key
             )
-            val timeLeft = CacheUtils.getCacheTime(
+            val timeLeft = com.simpleapps.cacheutils.CacheUtils.getCacheTime(
                 activity,
                 key
             )
@@ -140,8 +148,11 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
         }
     }
 
-    private fun loadFromCache(cache: String, cacheval: CacheUtils.Companion.CACHEVAL) {
-        if (cacheval == CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST) {
+    private fun loadFromCache(
+        cache: String,
+        cacheval: com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL
+    ) {
+        if (cacheval == com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST) {
             val jsonArray = JSONArray(JSONObject(cache).get("list").toString())
             val stringToList = DataConverter.stringToList(jsonArray.toString())
             return if (stringToList != null) {
@@ -155,20 +166,23 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                 val alist: List<ListItem> = arr
                 initForecast(alist)
             } else {
-                loadFromApi(CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST)
+                loadFromApi(com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST)
             }
-        } else if (cacheval == CacheUtils.Companion.CACHEVAL.CURRENT_WEATHER) {
+        } else if (cacheval == com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.CURRENT_WEATHER) {
             setCurrentWeatherUI(cache)
         }
     }
 
-    private fun loadFromApi(cacheval: CacheUtils.Companion.CACHEVAL) {
-        var city = CacheUtils.getCache(activity, CacheUtils.Companion.CACHEVAL.CITY)
+    private fun loadFromApi(cacheval: com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL) {
+        var city = com.simpleapps.cacheutils.CacheUtils.getCache(
+            activity,
+            com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.CITY
+        )
         if (city == null) {
             city = fetchCityFromCoord(city)
         }
         val queue = Volley.newRequestQueue(requireContext())
-        if (cacheval == CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST) {
+        if (cacheval == com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST) {
             val url = "http://api.openweathermap.org/data/2.5/forecast?q=${
                 city?.replace(
                     "\n",
@@ -177,7 +191,7 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
             }&appid=${API_KEY_VALUE}&units=metric"
             val stringRequest = StringRequest(Request.Method.GET, url,
                 { response ->
-                    CacheUtils.setCache(
+                    com.simpleapps.cacheutils.CacheUtils.setCache(
                         activity, response,
                         cacheval
                     )
@@ -203,20 +217,20 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                 }
             )
             queue.add(stringRequest)
-        } else if (cacheval == CacheUtils.Companion.CACHEVAL.CURRENT_WEATHER) {
+        } else if (cacheval == com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.CURRENT_WEATHER) {
             val url = "http://api.openweathermap.org/data/2.5/weather?q=${
                 city?.replace(
                     "\n",
                     ""
                 )
             }&appid=${API_KEY_VALUE}&units=metric"
-            val stringRequest = StringRequest(Request.Method.GET, url,
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
                 { response ->
-                    CacheUtils.setCache(
+                    com.simpleapps.cacheutils.CacheUtils.setCache(
                         activity, response,
                         cacheval
                     )
-
                     setCurrentWeatherUI(response)
                 },
                 {
@@ -241,9 +255,8 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
             getTempString(main?.temp.toString())
         setWeatherIcon(containerForecast.imageViewWeatherIcon, weather?.icon)
         containerForecast.textViewHumidity.text =
-            main?.humidity.toString()
+            """${main?.humidity.toString()}%"""
         containerForecast.cardView.setCardBackgroundColor(getColor(fromJson.dt?.toLong()))
-        Log.d("texts", "loadFromApi: $fromJson")
     }
 
     fun getTempString(temp: String): String {
@@ -302,8 +315,14 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
 
     private fun fetchCityFromCoord(city: String?): String? {
         var city1 = city
-        val latitude = CacheUtils.getCache(activity, CacheUtils.Companion.CACHEVAL.lat)
-        val longitude = CacheUtils.getCache(activity, CacheUtils.Companion.CACHEVAL.lon)
+        val latitude = com.simpleapps.cacheutils.CacheUtils.getCache(
+            activity,
+            com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.lat
+        )
+        val longitude = com.simpleapps.cacheutils.CacheUtils.getCache(
+            activity,
+            com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.lon
+        )
         val latitude1 = latitude
         val longitude1 = longitude
         Log.d("texts", """fetchLocation: $latitude1 $longitude1 """)
@@ -363,6 +382,7 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
                     DashboardFragmentDirections.actionDashboardFragmentToWeatherDetailFragment(
                         item
                     )
+                Log.d("texts", "initForecastAdapter: ")
                 findNavController()
                     .navigate(
                         action,

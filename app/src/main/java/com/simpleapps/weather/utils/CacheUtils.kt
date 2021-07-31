@@ -1,16 +1,15 @@
-package com.simpleapps.weather.utils
+package com.simpleapps.cacheutils
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.fragment.app.FragmentActivity
 
 class CacheUtils {
     companion object {
         enum class CACHEVAL {
-            WEATHER_FORECAST, CITY, lat, lon, CURRENT_WEATHER
+            WEATHER_FORECAST, CITY, lat, lon, CURRENT_WEATHER, OPEN_COUNT
         }
 
-        fun setCache(activity: FragmentActivity?, response: String?, key: CACHEVAL) {
+        fun setCache(activity: Context?, response: String?, key: CACHEVAL) {
             if (activity != null && response != null && response.trim() != "") {
                 initCache(activity).edit().putString(key.toString(), response).apply();
                 val l = (System.currentTimeMillis() + (1000L * 6L * 60L * 60L))
@@ -18,7 +17,7 @@ class CacheUtils {
             }
         }
 
-        fun getCacheTime(activity: FragmentActivity?, key: CACHEVAL): Long {
+        fun getCacheTime(activity: Context?, key: CACHEVAL): Long {
             if (activity != null) {
                 return initCache(activity).getLong(
                     key.toString() + "_time",
@@ -28,7 +27,7 @@ class CacheUtils {
             return 0
         }
 
-        fun getCache(activity: FragmentActivity?, key: CACHEVAL): String? {
+        fun getCache(activity: Context?, key: CACHEVAL): String? {
             if (activity != null) {
                 return initCache(activity).getString(key.toString(), null)
             }

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
+        app:cardBackgroundColor="#73FFDE"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
         tools:visibility="visible">
@@ -15,9 +16,9 @@
         <RelativeLayout
             android:id="@+id/rootView"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:layout_height="wrap_content">
+            android:paddingBottom="20dp">
 
             <ImageView
                 android:id="@+id/imageViewWeatherIcon"

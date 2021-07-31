@@ -7,6 +7,7 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View.GONE
@@ -21,6 +22,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.simpleapps.cacheutils.CacheUtils
 import com.simpleapps.weather.R
 import com.simpleapps.weather.core.BaseFragment
 import com.simpleapps.weather.databinding.FragmentSearchBinding
@@ -28,7 +30,6 @@ import com.simpleapps.weather.db.entity.CitiesForSearchEntity
 import com.simpleapps.weather.di.Injectable
 import com.simpleapps.weather.ui.main.MainActivity
 import com.simpleapps.weather.ui.search.result.SearchResultAdapter
-import com.simpleapps.weather.utils.CacheUtils
 import com.simpleapps.weather.utils.extensions.hideKeyboard
 import com.simpleapps.weather.utils.extensions.observeWith
 import com.simpleapps.weather.utils.extensions.tryCatch
@@ -184,6 +185,7 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
                             locationRequest1.interval = (20 * 1000).toLong()
                             locationCallback = object : LocationCallback() {
                                 override fun onLocationResult(locationResult: LocationResult) {
+                                    Log.d("texts", "onLocationResult: " + locationResult)
                                     for (location in locationResult.locations) {
                                         if (location != null) {
                                             try {
@@ -201,10 +203,10 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
                                                     location.latitude,
                                                     location.longitude
                                                 )
-                                                CacheUtils.setCache(
+                                                com.simpleapps.cacheutils.CacheUtils.setCache(
                                                     activity,
                                                     city,
-                                                    CacheUtils.Companion.CACHEVAL.CITY
+                                                    com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.CITY
                                                 )
                                             } catch (e: Exception) {
                                                 Log.d(
@@ -221,6 +223,10 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
                                     }
                                 }
                             }
+                            fusedLocationClient.requestLocationUpdates(
+                                locationRequest1, locationCallback,
+                                Looper.getMainLooper()
+                            )
                         }
                     }
                 }.addOnFailureListener {
