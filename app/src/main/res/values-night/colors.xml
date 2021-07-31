@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="colorLevelA">#E57373</color>
+    <color name="colorLevelB">#BA68C8</color>
+    <color name="colorLevelC">#7986CB</color>
+    <color name="colorLevelD">#4FC3F7</color>
+    <color name="colorLevelE">#4DB6AC</color>
+    <color name="colorLevelF">#81C784</color>
+    <color name="colorLevelG">#DCE775</color>
+    <color name="colorLevelH">#FFB74D</color>
+
+
+    <color name="white">#FFFFFF</color>
+    <color name="whiteWithOpacity">#33FFFFFF</color>
+    <color name="whiteWithHalfOpacity">#80FFFFFF</color>
+    <color name="mainTextColor">#130E51</color>
+    <color name="chipItemBackgroundColor">#1AADA7FE</color>
+    <color name="chipTextColor">#5D50FE</color>
+
+</resources>

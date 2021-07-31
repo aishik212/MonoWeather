@@ -12,7 +12,19 @@ class CacheUtils {
         fun setCache(activity: Context?, response: String?, key: CACHEVAL) {
             if (activity != null && response != null && response.trim() != "") {
                 initCache(activity).edit().putString(key.toString(), response).apply();
-                val l = (System.currentTimeMillis() + (1000L * 6L * 60L * 60L))
+                var l = (System.currentTimeMillis() + (1000L * 6L * 60L * 60L))
+                when (key) {
+                    CACHEVAL.WEATHER_FORECAST -> {
+                        l = (System.currentTimeMillis() + (1000L * 6L * 60L * 60L))
+                    }
+                    CACHEVAL.CURRENT_WEATHER -> {
+                        l = (System.currentTimeMillis() + (1000L * 1L * 60L * 60L) / 12)
+                    }
+                    else -> {
+                        l = (System.currentTimeMillis() + (1000L * 6L * 60L * 60L))
+                    }
+                }
+
                 initCache(activity).edit().putLong(key.toString() + "_time", l).apply();
             }
         }

@@ -1,7 +1,6 @@
 package com.simpleapps.weather.ui.splash
 
 import android.graphics.Color
-import android.util.Log
 import androidx.navigation.fragment.findNavController
 import com.mikhaellopez.rxanimation.*
 import com.simpleapps.cacheutils.CacheUtils
@@ -141,7 +140,6 @@ class SplashFragment : BaseFragment<SplashFragmentViewModel, FragmentSplashBindi
                 .subscribe()
 
         )
-        Log.d("texts", "endSplashAnimation: $openNumber")
         com.simpleapps.cacheutils.CacheUtils.setCache(
             activity, (openNumber + 1).toString(),
             com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.OPEN_COUNT

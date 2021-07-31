@@ -16,7 +16,10 @@ import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONArray
 import org.json.JSONObject
 
-class WeatherDetailFragment : BaseFragment<WeatherDetailViewModel, FragmentWeatherDetailBinding>(R.layout.fragment_weather_detail, WeatherDetailViewModel::class.java), Injectable {
+class WeatherDetailFragment : BaseFragment<WeatherDetailViewModel, FragmentWeatherDetailBinding>(
+    R.layout.fragment_weather_detail,
+    WeatherDetailViewModel::class.java
+), Injectable {
 
     private val weatherDetailFragmentArgs: WeatherDetailFragmentArgs by navArgs()
     var disposable = CompositeDisposable()
@@ -36,8 +39,8 @@ class WeatherDetailFragment : BaseFragment<WeatherDetailViewModel, FragmentWeath
                 )
         }
 
-        val key = com.simpleapps.cacheutils.CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST
-        val cache = com.simpleapps.cacheutils.CacheUtils.getCache(
+        val key = CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST
+        val cache = CacheUtils.getCache(
             activity,
             key
         )

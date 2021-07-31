@@ -75,7 +75,7 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
         Dexter.withContext(activity)
             .withPermissions(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
@@ -157,7 +157,7 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val permArr: MutableList<String> = mutableListOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
         Log.d("texts", "fetchLocation: " + checkPermission(permArr))
         if (checkPermission(permArr)) {
@@ -247,6 +247,9 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
         binding.continueCityBtn.setOnClickListener {
             val viewModel = binding.viewModel
             viewModel?.saveLatLong(latitude.toString(), longitude.toString())
+            CacheUtils.setCache(activity, latitude.toString(), CacheUtils.Companion.CACHEVAL.lat)
+            CacheUtils.setCache(activity, longitude.toString(), CacheUtils.Companion.CACHEVAL.lon)
+            CacheUtils.setCache(activity, city, CacheUtils.Companion.CACHEVAL.CITY)
             findNavController().navigate(R.id.action_searchFragment_to_dashboardFragment)
         }
     }
@@ -256,7 +259,7 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>(
         binding.skipBtn.setOnClickListener { skip() }
         val permArr: MutableList<String> = mutableListOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
         if (checkPermission(permArr)) {
             continueAfterGettingLocation()
