@@ -1,16 +1,19 @@
 package com.simpleapps.weather.ui.main
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
 import com.google.android.material.navigation.NavigationView
+import com.simpleapps.cacheutils.CacheUtils
 import com.simpleapps.weather.R
 import com.simpleapps.weather.core.BaseActivity
 import com.simpleapps.weather.databinding.ActivityMainBinding
@@ -22,7 +25,9 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>(MainActivityViewModel::class.java), HasAndroidInjector, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity :
+    BaseActivity<MainActivityViewModel, ActivityMainBinding>(MainActivityViewModel::class.java),
+    HasAndroidInjector, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
@@ -41,6 +46,28 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>(Ma
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setTransparentStatusBar()
         setupNavigation()
+        val cache = CacheUtils.initCache(applicationContext)
+        val isNight = cache.getBoolean("night_mode", false)
+        if (isNight) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+        binding.darkImv.setOnClickListener {
+            val cache = CacheUtils.initCache(applicationContext)
+            val isNight = cache.getBoolean("night_mode", false)
+            if (isNight) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                cache.edit().putBoolean("night_mode", false).apply()
+                finish()
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                cache.edit().putBoolean("night_mode", true).apply()
+                finish()
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+        }
     }
 
     private fun setTransparentStatusBar() {
@@ -107,7 +134,10 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>(Ma
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(findNavController(R.id.container_fragment), binding.drawerLayout)
+        return NavigationUI.navigateUp(
+            findNavController(R.id.container_fragment),
+            binding.drawerLayout
+        )
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -119,6 +149,8 @@ class MainActivity : BaseActivity<MainActivityViewModel, ActivityMainBinding>(Ma
                 findNavController(R.id.container_fragment).navigate(R.id.githubDialog)
             }
         }
-        return item.onNavDestinationSelected(findNavController(R.id.container_fragment)) || super.onOptionsItemSelected(item)
+        return item.onNavDestinationSelected(findNavController(R.id.container_fragment)) || super.onOptionsItemSelected(
+            item
+        )
     }
 }

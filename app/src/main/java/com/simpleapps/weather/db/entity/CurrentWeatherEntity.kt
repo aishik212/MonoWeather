@@ -1,5 +1,6 @@
 package com.simpleapps.weather.db.entity
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Parcelable
 import androidx.room.*
@@ -76,7 +77,7 @@ data class CurrentWeatherEntity(
         }
     }
 
-    fun getColor(dt: Long?): Int {
+    fun getColor(dt: Long?,context: Context): Int {
         return when (dt?.let { getDateTime(it) }) {
             DayOfWeek.MONDAY -> Color.parseColor("#E57373")
             DayOfWeek.TUESDAY -> Color.parseColor("#BA68C8")

@@ -38,6 +38,20 @@
 
             </androidx.appcompat.widget.Toolbar>
 
+            <ImageView
+                android:id="@+id/dark_imv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/toolbar"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dp"
+                android:tint="@color/blk"
+                app:layout_constraintBottom_toBottomOf="@+id/chipToday"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_light_mode_24" />
+
             <fragment
                 android:id="@+id/container_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"

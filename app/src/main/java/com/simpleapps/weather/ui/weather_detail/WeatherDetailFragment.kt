@@ -10,6 +10,7 @@ import com.simpleapps.weather.databinding.FragmentWeatherDetailBinding
 import com.simpleapps.weather.di.Injectable
 import com.simpleapps.weather.domain.model.ListItem
 import com.simpleapps.weather.ui.weather_detail.weatherHourOfDay.WeatherHourOfDayAdapter
+import com.simpleapps.weather.utils.AdUtils
 import com.simpleapps.weather.utils.extensions.observeWith
 import com.simpleapps.weather.utils.typeconverters.DataConverter
 import io.reactivex.disposables.CompositeDisposable
@@ -40,8 +41,10 @@ class WeatherDetailFragment : BaseFragment<WeatherDetailViewModel, FragmentWeath
         }
 
         val key = CacheUtils.Companion.CACHEVAL.WEATHER_FORECAST
+        val activity = activity
+        val activity1 = activity
         val cache = CacheUtils.getCache(
-            activity,
+            activity1,
             key
         )
         val jsonArray = JSONArray(JSONObject(cache).get("list").toString())
@@ -62,6 +65,11 @@ class WeatherDetailFragment : BaseFragment<WeatherDetailViewModel, FragmentWeath
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = inflateTransition
 //        initWeatherHourOfDayAdapter()
+        if(activity1 != null)
+        {
+            AdUtils.showBannerAd(activity1, getString(R.string.BasicBannerId),binding.bannerAdFrameDetail)
+        }
+
     }
 
     private fun initWeatherHourOfDayAdapter(list: List<ListItem>) {

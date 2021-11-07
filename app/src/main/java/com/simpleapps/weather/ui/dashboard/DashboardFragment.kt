@@ -1,5 +1,6 @@
 package com.simpleapps.weather.ui.dashboard
 
+import android.content.Context
 import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
@@ -8,6 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
@@ -26,6 +28,7 @@ import com.simpleapps.weather.domain.model.CurrentWeatherResponse
 import com.simpleapps.weather.domain.model.ListItem
 import com.simpleapps.weather.ui.dashboard.forecast.ForecastAdapter
 import com.simpleapps.weather.ui.main.MainActivity
+import com.simpleapps.weather.utils.AdUtils
 import com.simpleapps.weather.utils.typeconverters.DataConverter
 import com.squareup.picasso.Picasso
 import org.json.JSONArray
@@ -98,14 +101,19 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
         }*/
         loadCurrentWeather()
         loadForecast()
-        var city = CacheUtils.getCache(
-            activity,
-            CacheUtils.Companion.CACHEVAL.CITY
-        )
-        if (city == null) {
-            city = fetchCityFromCoord(city)
+        val activity = activity
+        if (activity != null) {
+            var city = CacheUtils.getCache(
+                activity,
+                CacheUtils.Companion.CACHEVAL.CITY
+            )
+
+            if (city == null) {
+                city = fetchCityFromCoord(city)
+            }
+            (activity as MainActivity).viewModel.toolbarTitle.set(city)
+            AdUtils.showBannerAd(activity, getString(R.string.BasicBannerId), binding.bannerAdFrame)
         }
-        (activity as MainActivity).viewModel.toolbarTitle.set(city)
     }
 
     private fun loadCurrentWeather() {
@@ -267,7 +275,12 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
             setWeatherIcon(containerForecast.imageViewWeatherIcon, weather.icon)
             containerForecast.textViewHumidity.text =
                 """${main.humidity.toString()}%"""
-            containerForecast.cardView.setCardBackgroundColor(getColor(fromJson.dt?.toLong()))
+            containerForecast.cardView.setCardBackgroundColor(
+                getColor(
+                    fromJson.dt?.toLong(),
+                    requireContext()
+                )
+            )
         } else {
             if (tries < 5) {
                 tries++
@@ -301,16 +314,16 @@ class DashboardFragment : BaseFragment<DashboardFragmentViewModel, FragmentDashb
     }
 
 
-    fun getColor(dt: Long?): Int {
+    fun getColor(dt: Long?, context: Context): Int {
         return when (dt?.let { getDateTime(it) }) {
-            DayOfWeek.MONDAY -> Color.parseColor("#E57373")
-            DayOfWeek.TUESDAY -> Color.parseColor("#BA68C8")
-            DayOfWeek.WEDNESDAY -> Color.parseColor("#7986CB")
-            DayOfWeek.THURSDAY -> Color.parseColor("#4FC3F7")
-            DayOfWeek.FRIDAY -> Color.parseColor("#4DB6AC")
-            DayOfWeek.SATURDAY -> Color.parseColor("#81C784")
-            DayOfWeek.SUNDAY -> Color.parseColor("#DCE775")
-            else -> Color.parseColor("#E57373")
+            DayOfWeek.MONDAY -> ContextCompat.getColor(context, R.color.colorLevelA)
+            DayOfWeek.TUESDAY -> ContextCompat.getColor(context, R.color.colorLevelB)
+            DayOfWeek.WEDNESDAY -> ContextCompat.getColor(context, R.color.colorLevelC)
+            DayOfWeek.THURSDAY -> ContextCompat.getColor(context, R.color.colorLevelD)
+            DayOfWeek.FRIDAY -> ContextCompat.getColor(context, R.color.colorLevelE)
+            DayOfWeek.SATURDAY -> ContextCompat.getColor(context, R.color.colorLevelF)
+            DayOfWeek.SUNDAY -> ContextCompat.getColor(context, R.color.colorLevelG)
+            else -> ContextCompat.getColor(context, R.color.colorLevelA)
         }
     }
 

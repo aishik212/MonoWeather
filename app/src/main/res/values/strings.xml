@@ -23,4 +23,7 @@
     <string name="welcome_text">Welcome To\nMonoWeather</string>
     <string name="close_fab_string">close card</string>
     <string name="title_activity_compose_test_search">composeTestSearchActivity</string>
+
+    <string name="admobAppId">ca-app-pub-5453528366471630~5452035099</string>
+    <string name="BasicBannerId">ca-app-pub-5453528366471630/3585431419</string>
 </resources>

@@ -16,7 +16,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="20dp"
-            android:backgroundTint="@{viewModel.item.getColor()}"
+            android:backgroundTint="@{viewModel.item.getColor(context)}"
             android:transitionName="@{String.format(@string/cardView, viewModel.item.getDay())}"
             app:cardCornerRadius="24dp"
             tools:backgroundTint="@android:color/holo_orange_dark">
@@ -42,6 +42,7 @@
                     android:layout_below="@id/textViewDayOfWeek"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="12dp"
+                    android:tint="@color/whiteWithOpacity"
                     android:transitionName="@{String.format(@string/forecastIcon, viewModel.item.getDay())}"
                     app:setWeatherIcon="@{viewModel.item.getWeatherItem().icon}"
                     tools:src="@drawable/ic_splash_big_cloud" />
@@ -125,7 +126,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-20dp"
             app:cornerRadius="20dp"
-            app:shadowColor="@{viewModel.item.getColor()}"
+            app:shadowColor="@{viewModel.item.getColor(context)}"
             app:shadowDx="3"
             app:shadowDy="30"
             app:shadowMarginBottom="30dp"

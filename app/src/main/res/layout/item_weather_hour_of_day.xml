@@ -28,8 +28,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
                 app:setWeatherIcon="@{viewModel.item.getWeatherItem().icon}"
-                android:tint="@{viewModel.item.getHourColor()}"
-                tools:src="@drawable/a10d_svg" />
+                tools:src="@drawable/a10d_svg"
+                android:tint="@{viewModel.item.getHourColor(context)}" />
 
 
             <TextView
@@ -63,5 +63,6 @@
         <variable
             name="viewModel"
             type="com.simpleapps.weather.ui.weather_detail.weatherHourOfDay.WeatherHourOfDayItemViewModel" />
+
     </data>
 </layout>

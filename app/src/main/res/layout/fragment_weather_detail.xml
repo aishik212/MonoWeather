@@ -23,7 +23,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="48dp"
                 android:layout_marginBottom="-32dp"
-                android:backgroundTint="@{viewModel.weatherItem.getColor()}"
+                android:backgroundTint="@{viewModel.weatherItem.getColor(context)}"
                 android:transitionName="@{String.format(@string/cardView, viewModel.weatherItem.getDay())}"
                 app:cardCornerRadius="24dp"
                 tools:backgroundTint="@color/colorPrimary">
@@ -37,6 +37,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent">
+
+                        <FrameLayout
+                            android:id="@+id/bannerAdFrameDetail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/cardViewHourOfDayContainer"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:visibility="visible" />
 
                         <ImageView
                             android:id="@+id/imageViewForecastIcon"

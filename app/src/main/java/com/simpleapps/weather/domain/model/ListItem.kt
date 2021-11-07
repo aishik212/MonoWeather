@@ -1,7 +1,10 @@
 package com.simpleapps.weather.domain.model
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Parcelable
+import androidx.core.content.ContextCompat
+import com.simpleapps.weather.R
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
@@ -67,30 +70,30 @@ data class ListItem(
         }
     }
 
-    fun getColor(): Int {
+    fun getColor(context: Context): Int {
         return when (dtTxt?.let { getDateTime(it) }) {
-            DayOfWeek.MONDAY -> Color.parseColor("#E57373")
-            DayOfWeek.TUESDAY -> Color.parseColor("#DCE775")
-            DayOfWeek.WEDNESDAY -> Color.parseColor("#BA68C8")
-            DayOfWeek.THURSDAY -> Color.parseColor("#81C784")
-            DayOfWeek.FRIDAY -> Color.parseColor("#4DB6AC")
-            DayOfWeek.SATURDAY -> Color.parseColor("#4FC3F7")
-            DayOfWeek.SUNDAY -> Color.parseColor("#7986CB")
-            else -> Color.parseColor("#E57373")
+            DayOfWeek.MONDAY -> ContextCompat.getColor(context, R.color.colorLevelA)
+            DayOfWeek.TUESDAY -> ContextCompat.getColor(context, R.color.colorLevelB)
+            DayOfWeek.WEDNESDAY -> ContextCompat.getColor(context, R.color.colorLevelC)
+            DayOfWeek.THURSDAY -> ContextCompat.getColor(context, R.color.colorLevelD)
+            DayOfWeek.FRIDAY -> ContextCompat.getColor(context, R.color.colorLevelE)
+            DayOfWeek.SATURDAY -> ContextCompat.getColor(context, R.color.colorLevelF)
+            DayOfWeek.SUNDAY -> ContextCompat.getColor(context, R.color.colorLevelG)
+            else -> ContextCompat.getColor(context, R.color.colorLevelA)
         }
     }
 
-    fun getHourColor(): Int {
+    fun getHourColor(context: Context): Int {
         return when (dtTxt?.substringAfter(" ")?.substringBeforeLast(":")) {
-            "00:00" -> Color.parseColor("#E57373")
-            "03:00" -> Color.parseColor("#BA68C8")
-            "06:00" -> Color.parseColor("#7986CB")
-            "09:00" -> Color.parseColor("#4FC3F7")
-            "12:00" -> Color.parseColor("#4DB6AC")
-            "15:00" -> Color.parseColor("#81C784")
-            "18:00" -> Color.parseColor("#DCE775")
-            "21:00" -> Color.parseColor("#FFB74D")
-            else -> Color.parseColor("#E57373")
+            "00:00" -> ContextCompat.getColor(context, R.color.colorLevelA)
+            "03:00" -> ContextCompat.getColor(context, R.color.colorLevelB)
+            "06:00" -> ContextCompat.getColor(context, R.color.colorLevelC)
+            "09:00" -> ContextCompat.getColor(context, R.color.colorLevelD)
+            "12:00" -> ContextCompat.getColor(context, R.color.colorLevelE)
+            "15:00" -> ContextCompat.getColor(context, R.color.colorLevelF)
+            "18:00" -> ContextCompat.getColor(context, R.color.colorLevelG)
+            "21:00" -> ContextCompat.getColor(context, R.color.colorLevelH)
+            else -> ContextCompat.getColor(context, R.color.colorLevelA)
         }
     }
 
